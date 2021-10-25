@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { getData } from './services/getData'
 import ReactHtmlParser from 'react-html-parser'
+import ChatInput from './ChatInput/ChatInput'
+import Messages from './components/Messages/Messages'
 
 function App() {
   const [data, setData] = useState('')
@@ -11,9 +13,13 @@ function App() {
       .catch((err) => console.log(err.message))
   }, [])
 
-  console.log(data)
-
-  return <div>{ReactHtmlParser(data)}</div>
+  return (
+    <div>
+      {ReactHtmlParser(data)}
+      <Messages />
+      <ChatInput />
+    </div>
+  )
 }
 
 export default App
