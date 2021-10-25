@@ -1,0 +1,24 @@
+{
+    "name": "simple-chat-app",
+    "version": "0.0.1",
+    "description": "a chat app for learning websockets (socket.io)",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint": "eslint ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/H-isaac23/Chat-App.git"
+    },
+    "author": "John Isaac Delgado",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/H-isaac23/Chat-App/issues"
+    },
+    "homepage": "https://github.com/H-isaac23/Chat-App#readme",
+    "devDependencies": {
+        "eslint": "^8.1.0",
+        "prettier": "2.4.1"
+    }
+}
