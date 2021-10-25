@@ -18,7 +18,6 @@
     },
     "homepage": "https://github.com/H-isaac23/Chat-App#readme",
     "devDependencies": {
-        "eslint": "^8.1.0",
         "prettier": "2.4.1"
     }
 }
