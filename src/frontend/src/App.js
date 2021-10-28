@@ -18,6 +18,7 @@ function App() {
       {ReactHtmlParser(data)}
       <Messages />
       <ChatInput />
+      <h1>HI</h1>
     </div>
   )
 }
