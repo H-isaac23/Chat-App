@@ -4,6 +4,7 @@
     <title>Socket.IO chat</title>
     <style>
       body {
+        box-sizing: border-box;
         margin: 0;
         padding-bottom: 3rem;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
@@ -42,9 +43,38 @@
         color: #fff;
       }
 
+      #nicknameForm {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 0.25rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        height: 3rem;
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+      }
+      #nickname {
+        border: none;
+        padding: 0 1rem;
+        flex-grow: 1;
+        border-radius: 2rem;
+        margin: 0.25rem;
+      }
+      #nickname:focus {
+        outline: none;
+      }
+      #nicknameForm > button {
+        background: #333;
+        border: none;
+        padding: 0 1rem;
+        margin: 0.25rem;
+        border-radius: 3px;
+        outline: none;
+        color: #fff;
+      }
+
       #messages {
         list-style-type: none;
-        margin: 0;
+        margin: 0.5rem 0 0 0;
         padding: 0;
       }
       #messages > li {
@@ -53,11 +83,27 @@
       #messages > li:nth-child(odd) {
         background: #efefef;
       }
+
+      #currentNickname {
+        display: none;
+        background: #333;
+        border: none;
+        padding: 0.5rem 1rem;
+        margin: 0.25rem;
+        border-radius: 3px;
+        color: white;
+      }
     </style>
   </head>
   <body>
+    <form id="nicknameForm">
+      <input type="text" id="nickname" placeholder="Nickname" /><button>
+        Confirm
+      </button>
+    </form>
+    <span id="currentNickname"></span>
     <ul id="messages"></ul>
-    <form id="form" action="">
+    <form id="form">
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
@@ -67,18 +113,33 @@
       const input = document.getElementById('input')
       const form = document.getElementById('form')
       const messages = document.getElementById('messages')
+      const nicknameForm = document.getElementById('nicknameForm')
+      const currentNickname = document.getElementById('currentNickname')
+      const nickname = document.getElementById('nickname')
+
+      nicknameForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+        if (nickname.value) {
+          nicknameForm.style.display = 'none'
+          currentNickname.textContent = nickname.value
+          currentNickname.style.display = 'block'
+        }
+      })
 
       form.addEventListener('submit', (e) => {
         e.preventDefault()
         if (input.value) {
-          socket.emit('chat message', input.value)
+          socket.emit('chat message', {
+            message: input.value,
+            nickname: currentNickname.innerText
+          })
           input.value = ''
         }
       })
 
-      socket.on('chat message', (msg) => {
+      socket.on('chat message', (data) => {
         const messageEl = document.createElement('li')
-        messageEl.textContent = msg
+        messageEl.textContent = `${data.nickname}: ${data.message}`
         messages.appendChild(messageEl)
         window.scrollTo(0, document.body.scrollHeight)
       })
