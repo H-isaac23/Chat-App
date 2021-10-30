@@ -63,6 +63,39 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io()
+
+      const input = document.getElementById('input')
+      const form = document.getElementById('form')
+      const messages = document.getElementById('messages')
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault()
+        if (input.value) {
+          socket.emit('chat message', input.value)
+          input.value = ''
+        }
+      })
+
+      socket.on('chat message', (msg) => {
+        const messageEl = document.createElement('li')
+        messageEl.textContent = msg
+        messages.appendChild(messageEl)
+        window.scrollTo(0, document.body.scrollHeight)
+      })
+
+      socket.on('user disconnect', (msg) => {
+        const messageEl = document.createElement('li')
+        messageEl.textContent = msg
+        messages.appendChild(messageEl)
+        window.scrollTo(0, document.body.scrollHeight)
+      })
+
+      socket.on('user connect', (msg) => {
+        const messageEl = document.createElement('li')
+        messageEl.textContent = msg
+        messages.appendChild(messageEl)
+        window.scrollTo(0, document.body.scrollHeight)
+      })
     </script>
   </body>
 </html>
