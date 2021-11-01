@@ -5,6 +5,7 @@ const { Server } = require('socket.io')
 const io = new Server(server)
 const PORT = 3000
 
+const usersOnline = {}
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html')
 })
@@ -20,20 +21,28 @@ io.on('connection', (socket) => {
   socket.on('isTyping', (data) => {
     const user = data.user ? data.user : socket.id.substring(0, 3)
     data.notification = `${user} is typing`
-    io.emit('typing', data)
+    socket.broadcast.emit('typing', data)
   })
 
   socket.on('disconnect', () => {
+    delete usersOnline[socket.id]
     io.emit(
       'user disconnect',
       `a user with id ${socket.id.substring(0, 3)} disconnected`
     )
+
+    io.emit('updateOnline', usersOnline)
   })
 
   socket.on('chat message', (data) => {
     console.log('Message: ', data)
     data.nickname = data.nickname ? data.nickname : socket.id.substring(0, 3)
     io.emit('chat message', data)
+  })
+
+  socket.on('isOnline', (user) => {
+    usersOnline[socket.id] = user
+    io.emit('updateOnline', usersOnline)
   })
 })
 

@@ -107,6 +107,7 @@
       </button>
     </form>
     <span id="currentNickname"></span>
+    <p id="usersOnline">Online: &nbsp;</p>
     <ul id="messages"></ul>
     <div id="typists"></div>
     <form id="form">
@@ -123,6 +124,7 @@
       const currentNickname = document.getElementById('currentNickname')
       const nickname = document.getElementById('nickname')
       const typists = document.getElementById('typists')
+      const usersOnline = document.getElementById('usersOnline')
 
       nicknameForm.addEventListener('submit', (e) => {
         e.preventDefault()
@@ -130,6 +132,7 @@
           nicknameForm.style.display = 'none'
           currentNickname.textContent = nickname.value
           currentNickname.style.display = 'block'
+          socket.emit('isOnline', nickname.value)
         }
       })
 
@@ -205,6 +208,14 @@
             typists.style.display = 'none'
           }
         }
+      })
+
+      socket.on('updateOnline', (users) => {
+        const userValues = []
+        for (let key in users) {
+          userValues.push(users[key])
+        }
+        usersOnline.textContent = 'Online: ' + userValues.join(' | ')
       })
     </script>
   </body>
