@@ -17,6 +17,12 @@ io.on('connection', (socket) => {
     'a user connected ' + socket.id.substring(0, 3)
   )
 
+  socket.on('isTyping', (data) => {
+    const user = data.user ? data.user : socket.id.substring(0, 3)
+    data.notification = `${user} is typing`
+    io.emit('typing', data)
+  })
+
   socket.on('disconnect', () => {
     io.emit(
       'user disconnect',
@@ -26,6 +32,7 @@ io.on('connection', (socket) => {
 
   socket.on('chat message', (data) => {
     console.log('Message: ', data)
+    data.nickname = data.nickname ? data.nickname : socket.id.substring(0, 3)
     io.emit('chat message', data)
   })
 })
